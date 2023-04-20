@@ -1,0 +1,26 @@
+:root {
+    --mainbackgroundcolor: #761b1b;
+    --secondarycolor: #be9423;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background-color: var(--secondarycolor);
+    padding: 20px;
+}
+
+header * {
+    background-color: var(--secondarycolor);
+}
+
+h1 {
+    font-size: 5rem;
+}
+
+* {
+    background-color: var(--mainbackgroundcolor);
+    color: var(--mainbackgroundcolor);
+}
