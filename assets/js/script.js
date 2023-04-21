@@ -29,13 +29,14 @@ fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
         var API_BASE_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast?'
         fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
             .then(function (response) {
-                if (!response.ok) throw new Error('OOP');
+                if (!response.ok) throw new Error('OOPs');
         
         
                 return response.json();
             })
             .then(function (data) {
-                console.log('data :>>',data)
+                console.log(data)
+                storeData (data)
             }).catch(function (error) {
                 console.log(error)
             })
@@ -44,21 +45,35 @@ fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
         console.error(error);
     })
 
-// var API_BASE_URL_FORECAST = 'api.openweathermap.org/data/2.5/forecast?'
-// userLat = JSON.parse(localStorage.getItem('latitude'))
-// userLon = JSON.parse(localStorage.getItem('longitude'))
-// // fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
-// fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9', {
-//     mode: 'cors'
-// })
-//     .then(function (response) {
-//         if (!response.ok) throw new Error('OOP');
+    function storeData (data) {
+        //Forecast for 1st day
+        temp1 = data.list[3].main.temp
+        wind1 = data.list[3].wind.speed
+        hum1 = data.list[3].main.humidity
+        date1 = data.list[3].dt
 
+        console.log('1st temperature :>>',temp1)
+        console.log('1st wind speed :>>',wind1)
+        console.log('1st humidity :>>',hum1)
+        console.log('1st unix time :>>',date1)
 
-//         response.json();
-//     })
-//     .then(function (data) {
-//         console.log('data :>>',data)
-//     }).catch(function (error) {
-//         console.log(error)
-//     })
+        localStorage.setItem('temperature1',JSON.stringify(temp1))
+        localStorage.setItem('wind1',JSON.stringify(wind1))
+        localStorage.setItem('humidity1',JSON.stringify(hum1))
+        localStorage.setItem('date1',JSON.stringify(date1))
+        //Forecast for 2nd day
+
+        //Forecast for 3rd day
+
+        //Forecast for 4th day
+
+        //Forecast for 5th day
+
+    }
+
+renderForecast()
+function renderForecast () {
+    var timeEl = document.querySelector('#time')
+    time1 = JSON.parse(localStorage.getItem('date1'))
+    timeEl.textContent = time1
+}
