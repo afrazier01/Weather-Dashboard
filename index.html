@@ -13,12 +13,58 @@
 <body>
     <header>
         <h1>Tae's Weather Dashboard</h1>
-        <p id="date">DATE PLACE HOLDER</p>
+        <p id="date-main">DATE PLACE HOLDER</p>
     </header>
     
     <div>
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid d-flex flex-column align-items-start">
+              <a class="navbar-brand">Search</a>
+              <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="City" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </div>
+          </nav>
         <h1 id="time">place date</h1>
         <p>place temp</p>
+
+        <!-- Results listed horizontally across the screen-->
+        <div class="d-flex">
+            <div class="card my-2" id='card1' style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h3>date</h3>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card my-2" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card my-2" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card my-2" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card my-2" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Each Result should display the date, weather img, temperature, wind, and humidity-->
+        
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
