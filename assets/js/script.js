@@ -77,7 +77,7 @@ function storeData (data) {
     date1 = data.list[7].dt
     icon1 = data.list[7].weather[0].icon
 
-    date1 = dayjs(date1*1000).format('M/D/YYYY')
+    date1 = dayjs(date1*1000).format('dddd - M/D/YYYY')
     temp1 = Math.round((temp1-273.15)*1.8+32)
 
     localStorage.setItem('temperature1',JSON.stringify(temp1))
@@ -92,7 +92,7 @@ function storeData (data) {
     date2 = data.list[15].dt
     icon2 = data.list[15].weather[0].icon
 
-    date2 = dayjs(date2*1000).format('M/D/YYYY')
+    date2 = dayjs(date2*1000).format('dddd - M/D/YYYY')
     temp2 = Math.round((temp2-273.15)*1.8+32)
 
     localStorage.setItem('temperature2',JSON.stringify(temp2))
@@ -107,7 +107,7 @@ function storeData (data) {
     date3 = data.list[23].dt
     icon3 = data.list[23].weather[0].icon
 
-    date3 = dayjs(date3*1000).format('M/D/YYYY')
+    date3 = dayjs(date3*1000).format('dddd - M/D/YYYY')
     temp3 = Math.round((temp3-273.15)*1.8+32)
 
     localStorage.setItem('temperature3',JSON.stringify(temp3))
@@ -122,7 +122,7 @@ function storeData (data) {
     date4 = data.list[31].dt
     icon4 = data.list[31].weather[0].icon
 
-    date4 = dayjs(date4*1000).format('M/D/YYYY')
+    date4 = dayjs(date4*1000).format('dddd - M/D/YYYY')
     temp4 = Math.round((temp4-273.15)*1.8+32)
 
     localStorage.setItem('temperature4',JSON.stringify(temp4))
@@ -137,7 +137,7 @@ function storeData (data) {
     date5 = data.list[39].dt
     icon5 = data.list[39].weather[0].icon
 
-    date5 = dayjs(date5*1000).format('M/D/YYYY')
+    date5 = dayjs(date5*1000).format('dddd - M/D/YYYY')
     temp5 = Math.round((temp5-273.15)*1.8+32)
 
     localStorage.setItem('temperature5',JSON.stringify(temp5))
@@ -149,7 +149,7 @@ function storeData (data) {
 
 function renderCurrent(data) {
     var currentDivEl = document.createElement('div')
-    currentDivEl.setAttribute('style',' width:80%; background-color: var(--secondarycolor); margin-top:20px;')
+    currentDivEl.setAttribute('style',' width:80%; background-color: var(--secondarycolor); margin-top:20px; margin-right: auto; margin-left: auto;')
     currentDivEl.setAttribute('class','card my2 align-items-center')
                 
     var currentDateEl = document.createElement('h2')
@@ -185,7 +185,8 @@ function renderCurrent(data) {
 function renderForecast () {
     //Div 
     var divEl = document.createElement('div')
-    divEl.setAttribute('class','d-flex')
+    divEl.setAttribute('class','d-flex justify-content-around')
+    divEl.setAttribute('style','margin-top:20px;')
     document.body.appendChild(divEl)
 
 
@@ -196,7 +197,7 @@ function renderForecast () {
     cardEl1.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
 
     //card elements
-    forecastDate1 = document.createElement('h2')
+    forecastDate1 = document.createElement('h4')
     forecastDate1.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
     forecastDate1.textContent = JSON.parse(localStorage.getItem('date1'))
     icon1 = document.createElement('img')
@@ -228,7 +229,7 @@ function renderForecast () {
     cardEl2.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
 
     //card elements
-    forecastDate2 = document.createElement('h2')
+    forecastDate2 = document.createElement('h4')
     forecastDate2.textContent = JSON.parse(localStorage.getItem('date2'))
     forecastDate2.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
     icon2 = document.createElement('img')
@@ -259,7 +260,7 @@ function renderForecast () {
     cardEl3.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
 
     //card elements
-    forecastDate3 = document.createElement('h2')
+    forecastDate3 = document.createElement('h4')
     forecastDate3.textContent = JSON.parse(localStorage.getItem('date3'))
     forecastDate3.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
     icon3 = document.createElement('img')
@@ -290,7 +291,7 @@ function renderForecast () {
     cardEl4.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
 
     //card elements
-    forecastDate4 = document.createElement('h2')
+    forecastDate4 = document.createElement('h4')
     forecastDate4.textContent = JSON.parse(localStorage.getItem('date4'))
     forecastDate4.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
     icon4 = document.createElement('img')
@@ -321,7 +322,7 @@ function renderForecast () {
     cardEl5.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
 
     //card elements
-    forecastDate5 = document.createElement('h2')
+    forecastDate5 = document.createElement('h4')
     forecastDate5.textContent = JSON.parse(localStorage.getItem('date5'))
     forecastDate5.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
     icon5 = document.createElement('img')
