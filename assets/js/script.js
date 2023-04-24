@@ -1,14 +1,19 @@
 var dateEl = document.querySelector('#date-main')
+var searchButton = document.querySelector('#search-button')
+var userInput = document.querySelector('#search-field')
 var date = dayjs().format('dddd, MMMM D, YYYY h:mm A')
 dateEl.textContent = date
 
-var API_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct?q='
-//make sure this variable can be parsed properly
-var userSearch = 'London'
-fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
+searchButton.addEventListener('click',function(e) {
+    e.preventDefault();
+
+
+    var userSearch = userInput.value
+    
+    var API_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct?q='
+    //make sure this variable can be parsed properly
+    fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
     .then(function (res) {
-        if (!res.ok) throw new Error('OOP');
-        
         return res.json();
     })
     .then(function (data) {
@@ -18,8 +23,6 @@ fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
         userLat = userLat.toString();
         userLon = userLon.toString()
         console.log('Name :>>', userName);
-        console.log('Latitude :>>', userLat);
-        console.log('Longitude :>>', userLon);
         //Have to set variables to local storage so they can be retrieved elsewhere
         localStorage.setItem('latitude', JSON.stringify(userLat))
         localStorage.setItem('longitude',JSON.stringify(userLon))
@@ -29,206 +32,317 @@ fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
         var API_BASE_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast?'
         fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
             .then(function (response) {
-                if (!response.ok) throw new Error('oops');
-        
-        
                 return response.json();
             })
             .then(function (data) {
                 console.log(data)
                 storeData (data)
-            }).catch(function (error) {
-                console.log(error)
+                renderForecast()
+        })
+
+        //third call
+        var API_BASE_URL_CURRENT = 'https://api.openweathermap.org/data/2.5/weather?'
+        fetch(API_BASE_URL_CURRENT + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
+            .then(function (res) {
+                return res.json();
+            }).then( function (data) {
+                console.log(data)
+
+                currentTemp = data.main.temp
+                currentWind = data.wind.speed
+                currentHum = data.main.humidity
+                currentDate = data.dt
+                currentIcon = data.weather[0].icon
+
+                currentDate = dayjs(currentDate*1000).format('M/D/YYYY')
+                currentTemp = Math.round((currentTemp-273.15)*1.8+32)
+
+                localStorage.setItem('currentTemperature',JSON.stringify(currentTemp))
+                localStorage.setItem('currentWind',JSON.stringify(currentWind))
+                localStorage.setItem('currentHum',JSON.stringify(currentHum))
+                localStorage.setItem('currentDate',JSON.stringify(currentDate))
+                localStorage.setItem('currentIcon',JSON.stringify(currentIcon))
+
+                renderCurrent (data)
             })
     })
-    .catch(function (error) {
-        console.error(error);
-    })
+})
 
-    function storeData (data) {
-        //Forecast for 1st day
-        temp1 = data.list[0].main.temp
-        wind1 = data.list[0].wind.speed
-        hum1 = data.list[0].main.humidity
-        date1 = data.list[0].dt
-        icon1 = data.list[0].weather[0].icon
+function storeData (data) {
 
-        date1 = dayjs(date1*1000).format('M/D/YYYY')
+    //Forecast for 1st day
+    temp1 = data.list[7].main.temp
+    wind1 = data.list[7].wind.speed
+    hum1 = data.list[7].main.humidity
+    date1 = data.list[7].dt
+    icon1 = data.list[7].weather[0].icon
 
-        console.log('1st temperature :>>',temp1)
-        console.log('1st wind speed :>>',wind1)
-        console.log('1st humidity :>>',hum1)
-        console.log('1st unix time :>>',date1)
-        console.log('1st icon :>>',icon1)
+    date1 = dayjs(date1*1000).format('M/D/YYYY')
+    temp1 = Math.round((temp1-273.15)*1.8+32)
 
-        localStorage.setItem('temperature1',JSON.stringify(temp1))
-        localStorage.setItem('wind1',JSON.stringify(wind1))
-        localStorage.setItem('humidity1',JSON.stringify(hum1))
-        localStorage.setItem('date1',JSON.stringify(date1))
-        localStorage.setItem('weathericon1',JSON.stringify(icon1))
-        //Forecast for 2nd day
-        temp2 = data.list[8].main.temp
-        wind2 = data.list[8].wind.speed
-        hum2 = data.list[8].main.humidity
-        date2 = data.list[8].dt
-        icon2 = data.list[8].weather[0].icon
+    localStorage.setItem('temperature1',JSON.stringify(temp1))
+    localStorage.setItem('wind1',JSON.stringify(wind1))
+    localStorage.setItem('humidity1',JSON.stringify(hum1))
+    localStorage.setItem('date1',JSON.stringify(date1))
+    localStorage.setItem('weathericon1',JSON.stringify(icon1))
+    //Forecast for 2nd day
+    temp2 = data.list[15].main.temp
+    wind2 = data.list[15].wind.speed
+    hum2 = data.list[15].main.humidity
+    date2 = data.list[15].dt
+    icon2 = data.list[15].weather[0].icon
 
-        date2 = dayjs(date2*1000).format('M/D/YYYY')
+    date2 = dayjs(date2*1000).format('M/D/YYYY')
+    temp2 = Math.round((temp2-273.15)*1.8+32)
 
-        console.log('2nd temperature :>>',temp2)
-        console.log('2nd wind speed :>>',wind2)
-        console.log('2nd humidity :>>',hum2)
-        console.log('2nd unix time :>>',date2)
+    localStorage.setItem('temperature2',JSON.stringify(temp2))
+    localStorage.setItem('wind2',JSON.stringify(wind2))
+    localStorage.setItem('humidity2',JSON.stringify(hum2))
+    localStorage.setItem('date2',JSON.stringify(date2))
+    localStorage.setItem('weathericon2',JSON.stringify(icon2))
+    //Forecast for 3rd day
+    temp3 = data.list[23].main.temp
+    wind3 = data.list[23].wind.speed
+    hum3 = data.list[23].main.humidity
+    date3 = data.list[23].dt
+    icon3 = data.list[23].weather[0].icon
 
-        localStorage.setItem('temperature2',JSON.stringify(temp2))
-        localStorage.setItem('wind2',JSON.stringify(wind2))
-        localStorage.setItem('humidity2',JSON.stringify(hum2))
-        localStorage.setItem('date2',JSON.stringify(date2))
-        localStorage.setItem('weathericon2',JSON.stringify(icon2))
-        //Forecast for 3rd day
-        temp3 = data.list[16].main.temp
-        wind3 = data.list[16].wind.speed
-        hum3 = data.list[16].main.humidity
-        date3 = data.list[16].dt
-        icon3 = data.list[16].weather[0].icon
+    date3 = dayjs(date3*1000).format('M/D/YYYY')
+    temp3 = Math.round((temp3-273.15)*1.8+32)
 
-        date3 = dayjs(date3*1000).format('M/D/YYYY')
+    localStorage.setItem('temperature3',JSON.stringify(temp3))
+    localStorage.setItem('wind3',JSON.stringify(wind3))
+    localStorage.setItem('humidity3',JSON.stringify(hum3))
+    localStorage.setItem('date3',JSON.stringify(date3))
+    localStorage.setItem('weathericon3',JSON.stringify(icon3))
+    //Forecast for 4th day
+    temp4 = data.list[31].main.temp
+    wind4 = data.list[31].wind.speed
+    hum4 = data.list[31].main.humidity
+    date4 = data.list[31].dt
+    icon4 = data.list[31].weather[0].icon
 
-        console.log('3rd temperature :>>',temp3)
-        console.log('3rd wind speed :>>',wind3)
-        console.log('3rd humidity :>>',hum3)
-        console.log('3rd unix time :>>',date3)
+    date4 = dayjs(date4*1000).format('M/D/YYYY')
+    temp4 = Math.round((temp4-273.15)*1.8+32)
 
-        localStorage.setItem('temperature3',JSON.stringify(temp3))
-        localStorage.setItem('wind3',JSON.stringify(wind3))
-        localStorage.setItem('humidity3',JSON.stringify(hum3))
-        localStorage.setItem('date3',JSON.stringify(date3))
-        localStorage.setItem('weathericon3',JSON.stringify(icon3))
-        //Forecast for 4th day
-        temp4 = data.list[24].main.temp
-        wind4 = data.list[24].wind.speed
-        hum4 = data.list[24].main.humidity
-        date4 = data.list[24].dt
-        icon4 = data.list[24].weather[0].icon
+    localStorage.setItem('temperature4',JSON.stringify(temp4))
+    localStorage.setItem('wind4',JSON.stringify(wind4))
+    localStorage.setItem('humidity4',JSON.stringify(hum4))
+    localStorage.setItem('date4',JSON.stringify(date4))
+    localStorage.setItem('weathericon4',JSON.stringify(icon4))
+    //Forecast for 5th day
+    temp5 = data.list[39].main.temp
+    wind5 = data.list[39].wind.speed
+    hum5 = data.list[39].main.humidity
+    date5 = data.list[39].dt
+    icon5 = data.list[39].weather[0].icon
 
-        date4 = dayjs(date4*1000).format('M/D/YYYY')
+    date5 = dayjs(date5*1000).format('M/D/YYYY')
+    temp5 = Math.round((temp5-273.15)*1.8+32)
 
-        console.log('4th temperature :>>',temp4)
-        console.log('4th wind speed :>>',wind4)
-        console.log('4th humidity :>>',hum4)
-        console.log('4th unix time :>>',date4)
-
-        localStorage.setItem('temperature4',JSON.stringify(temp4))
-        localStorage.setItem('wind4',JSON.stringify(wind4))
-        localStorage.setItem('humidity4',JSON.stringify(hum4))
-        localStorage.setItem('date4',JSON.stringify(date4))
-        localStorage.setItem('weathericon4',JSON.stringify(icon4))
-        //Forecast for 5th day
-        temp5 = data.list[32].main.temp
-        wind5 = data.list[32].wind.speed
-        hum5 = data.list[32].main.humidity
-        date5 = data.list[32].dt
-        icon5 = data.list[32].weather[0].icon
-
-        date5 = dayjs(date5*1000).format('M/D/YYYY')
-
-        console.log('5th temperature :>>',temp5)
-        console.log('5th wind speed :>>',wind5)
-        console.log('5th humidity :>>',hum5)
-        console.log('5th unix time :>>',date5)
-
-        localStorage.setItem('temperature5',JSON.stringify(temp5))
-        localStorage.setItem('wind5',JSON.stringify(wind5))
-        localStorage.setItem('humidity5',JSON.stringify(hum5))
-        localStorage.setItem('date5',JSON.stringify(date5))
-        localStorage.setItem('weathericon5',JSON.stringify(icon5))
+    localStorage.setItem('temperature5',JSON.stringify(temp5))
+    localStorage.setItem('wind5',JSON.stringify(wind5))
+    localStorage.setItem('humidity5',JSON.stringify(hum5))
+    localStorage.setItem('date5',JSON.stringify(date5))
+    localStorage.setItem('weathericon5',JSON.stringify(icon5))
 }
 
-renderForecast()
+function renderCurrent(data) {
+    var currentDivEl = document.createElement('div')
+    currentDivEl.setAttribute('style',' width:80%; background-color: var(--secondarycolor); margin-top:20px;')
+    currentDivEl.setAttribute('class','card my2 align-items-center')
+                
+    var currentDateEl = document.createElement('h2')
+    currentDateEl.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    currentDateEl.textContent = JSON.parse(localStorage.getItem('currentDate'))
+
+    // elements
+    var currentDateEl = document.createElement('h2')
+    currentDateEl.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    currentDateEl.textContent = JSON.parse(localStorage.getItem('currentDate'))
+    currentIcon = document.createElement('img')
+    currentIcon.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('currentIcon'))+'@2x.png')
+    //add alt
+    currentIcon.setAttribute('style',"width: 50px; background-color: var(--secondarycolor);")
+    currentTemp = document.createElement('h2')
+    currentTemp.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    currentTemp.textContent = 'Temp: '+JSON.parse(localStorage.getItem('currentTemperature'))+'°F'
+    currentWind = document.createElement('h2')
+    currentWind.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    currentWind.textContent = 'Wind: '+JSON.parse(localStorage.getItem('currentWind'))+' MPH'
+    currentHum = document.createElement('h2')
+    currentHum.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    currentHum.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('humidity1'))+' %'
+
+    document.body.appendChild(currentDivEl)
+    currentDivEl.appendChild(currentDateEl)
+    currentDivEl.appendChild(currentIcon)
+    currentDivEl.appendChild(currentTemp)
+    currentDivEl.appendChild(currentWind)
+    currentDivEl.appendChild(currentHum)
+}
+
 function renderForecast () {
     //Div 
     var divEl = document.createElement('div')
     divEl.setAttribute('class','d-flex')
     document.body.appendChild(divEl)
 
-    //convert icons to img
-    // var iconArray = {
-    //     '01d': 'https://openweathermap.org/img/wn/01d@2x.png',
-    //     '02d': 'https://openweathermap.org/img/wn/02d@2x.png',
-    //     '03d': 'https://openweathermap.org/img/wn/03d@2x.png',
-    //     '04d': 'https://openweathermap.org/img/wn/04d@2x.png',
-    //     '09d': 'https://openweathermap.org/img/wn/09d@2x.png',
-    //     '10d': 'https://openweathermap.org/img/wn/10d@2x.png',
-    //     '11d': 'https://openweathermap.org/img/wn/11d@2x.png',
-    //     '13d': 'https://openweathermap.org/img/wn/13d@2x.png',
-    //     '50d': 'https://openweathermap.org/img/wn/02d@2x.png'
-    // }
-    // icon1 = JSON.parse(localStorage.getItem('weathericon1'))
-    
+
+
     //Card 1
     var cardEl1 = document.createElement('card')
-    cardEl1.setAttribute('class','card my2')
-    cardEl1.setAttribute('style','width: 18rem;')
+    cardEl1.setAttribute('class','card my2 align-items-center')
+    cardEl1.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
 
     //card elements
     forecastDate1 = document.createElement('h2')
+    forecastDate1.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
     forecastDate1.textContent = JSON.parse(localStorage.getItem('date1'))
     icon1 = document.createElement('img')
     icon1.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('weathericon1'))+'@2x.png')
+    //add alt
+    icon1.setAttribute('style',"width: 50px; background-color: var(--secondarycolor);")
+    temp1El = document.createElement('h2')
+    temp1El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    temp1El.textContent = 'Temp: '+JSON.parse(localStorage.getItem('temperature1'))+'°F'
+    wind1El = document.createElement('h2')
+    wind1El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    wind1El.textContent = 'Wind: '+JSON.parse(localStorage.getItem('wind1'))+' MPH'
+    hum1El = document.createElement('h2')
+    hum1El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    hum1El.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('humidity1'))+' %'
 
-    //weather icon, temperature, wind, and humidity
-
-    //append elements
+    //append card 1 elements
     cardEl1.appendChild(forecastDate1)
     cardEl1.appendChild(icon1)
+    cardEl1.appendChild(temp1El)
+    cardEl1.appendChild(wind1El)
+    cardEl1.appendChild(hum1El)
     
+
+
     //Card 2
     var cardEl2 = document.createElement('card')
-    cardEl2.setAttribute('class','card my2')
-    cardEl2.setAttribute('style','width: 18rem;')
+    cardEl2.setAttribute('class','card my2 align-items-center')
+    cardEl2.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
+
+    //card elements
     forecastDate2 = document.createElement('h2')
     forecastDate2.textContent = JSON.parse(localStorage.getItem('date2'))
+    forecastDate2.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    icon2 = document.createElement('img')
+    icon2.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('weathericon2'))+'@2x.png')
+    icon2.setAttribute('style',"width: 50px; background-color: var(--secondarycolor);")
+    temp1E2 = document.createElement('h2')
+    temp1E2.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    temp1E2.textContent = 'Temp: '+JSON.parse(localStorage.getItem('temperature2'))+'°F'
+    wind2El = document.createElement('h2')
+    wind2El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    wind2El.textContent = 'Wind: '+JSON.parse(localStorage.getItem('wind2'))+' MPH'
+    hum2El = document.createElement('h2')
+    hum2El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    hum2El.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('humidity2'))+' %'
 
-    //weather icon, temperature, wind, and humidity
-
-    //append elements
+    //append card 2 elements
     cardEl2.appendChild(forecastDate2)
+    cardEl2.appendChild(icon2)
+    cardEl2.appendChild(temp1E2)
+    cardEl2.appendChild(wind2El)
+    cardEl2.appendChild(hum2El)
+
+
 
     //Card 3
     var cardEl3 = document.createElement('card')
-    cardEl3.setAttribute('class','card my2')
-    cardEl3.setAttribute('style','width: 18rem;')
+    cardEl3.setAttribute('class','card my2 align-items-center')
+    cardEl3.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
+
+    //card elements
     forecastDate3 = document.createElement('h2')
     forecastDate3.textContent = JSON.parse(localStorage.getItem('date3'))
+    forecastDate3.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    icon3 = document.createElement('img')
+    icon3.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('weathericon3'))+'@2x.png')
+    icon3.setAttribute('style',"width: 50px; background-color: var(--secondarycolor);")
+    temp3El = document.createElement('h2')
+    temp3El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    temp3El.textContent = 'Temp: '+JSON.parse(localStorage.getItem('temperature3'))+'°F'
+    wind3El = document.createElement('h2')
+    wind3El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    wind3El.textContent = 'Wind: '+JSON.parse(localStorage.getItem('wind3'))+' MPH'
+    hum3El = document.createElement('h2')
+    hum3El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    hum3El.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('humidity3'))+' %'
 
-    //weather icon, temperature, wind, and humidity
-
-    //append elements
+    //append card 3 elements
     cardEl3.appendChild(forecastDate3)
+    cardEl3.appendChild(icon3)
+    cardEl3.appendChild(temp3El)
+    cardEl3.appendChild(wind3El)
+    cardEl3.appendChild(hum3El)
+
+
 
     //Card 4
     var cardEl4 = document.createElement('card')
-    cardEl4.setAttribute('class','card my2 d-flex')
-    cardEl4.setAttribute('style','width: 18rem;')
+    cardEl4.setAttribute('class','card my2 align-items-center')
+    cardEl4.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
+
+    //card elements
     forecastDate4 = document.createElement('h2')
     forecastDate4.textContent = JSON.parse(localStorage.getItem('date4'))
+    forecastDate4.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    icon4 = document.createElement('img')
+    icon4.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('weathericon4'))+'@2x.png')
+    icon4.setAttribute('style',"width: 50px; background-color: var(--secondarycolor);")
+    temp4El = document.createElement('h2')
+    temp4El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    temp4El.textContent = 'Temp: '+JSON.parse(localStorage.getItem('temperature4'))+'°F'
+    wind4El = document.createElement('h2')
+    wind4El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    wind4El.textContent = 'Wind: '+JSON.parse(localStorage.getItem('wind4'))+'MPH'
+    hum4El = document.createElement('h2')
+    hum4El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    hum4El.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('humidity4'))+' %'
 
-    //weather icon, temperature, wind, and humidity
-
-    //append elements
+    //append card 4 elements
     cardEl4.appendChild(forecastDate4)
+    cardEl4.appendChild(icon4)
+    cardEl4.appendChild(temp4El)
+    cardEl4.appendChild(wind4El)
+    cardEl4.appendChild(hum4El)
+
+
 
     //Card 5
     var cardEl5 = document.createElement('card')
-    cardEl5.setAttribute('class','card my2')
-    cardEl5.setAttribute('style','width: 18rem;')
+    cardEl5.setAttribute('class','card my2 align-items-center')
+    cardEl5.setAttribute('style','width: 18rem; background-color: var(--secondarycolor);')
+
+    //card elements
     forecastDate5 = document.createElement('h2')
     forecastDate5.textContent = JSON.parse(localStorage.getItem('date5'))
+    forecastDate5.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    icon5 = document.createElement('img')
+    icon5.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('weathericon5'))+'@2x.png')
+    icon5.setAttribute('style',"width: 50px; background-color: var(--secondarycolor);")
+    temp5El = document.createElement('h2')
+    temp5El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    temp5El.textContent = 'Temp: '+JSON.parse(localStorage.getItem('temperature5'))+'°F'
+    wind5El = document.createElement('h2')
+    wind5El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    wind5El.textContent = 'Wind: '+JSON.parse(localStorage.getItem('wind5'))+'MPH'
+    hum5El = document.createElement('h2')
+    hum5El.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
+    hum5El.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('humidity5'))+' %'
 
-    //weather icon, temperature, wind, and humidity
-
-    //append elements
+    //append card 5 elements
     cardEl5.appendChild(forecastDate5)
+    cardEl5.appendChild(icon5)
+    cardEl5.appendChild(temp5El)
+    cardEl5.appendChild(wind5El)
+    cardEl5.appendChild(hum5El)
 
     //append cards
     divEl.appendChild(cardEl1)
@@ -236,12 +350,4 @@ function renderForecast () {
     divEl.appendChild(cardEl3)
     divEl.appendChild(cardEl4)
     divEl.appendChild(cardEl5)
-
-    // <div class="card my-2" id='card1' style="width: 18rem;">
-    //             <img src="..." class="card-img-top" alt="...">
-    //             <div class="card-body">
-    //                 <h3>date</h3>
-    //               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    //             </div>
-    
 }
