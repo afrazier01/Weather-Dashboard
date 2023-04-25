@@ -6,44 +6,39 @@ dateEl.textContent = date
 
 searchButton.addEventListener('click',function(e) {
     e.preventDefault();
-    
-    removeData ()
     var userSearch = userInput.value
-    // localStorage.setItem(userSearch,JSON.stringify(userSearch))
+    fetchAPI(userSearch)
+})
 
-    //add div to page
-    // add a card for each userSearch and add the content to the div
-    // want cards to be added horizontally to avoid bad formatting
-    // cards should include name from data so think about location
-    
+function fetchAPI (userSearch) {
+    removeData ();
     var API_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct?q='
-    //make sure this variable can be parsed properly
     fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
     .then(function (res) {
-        return res.json();
+    return res.json();
     })
     .then(function (data) {
-        userName = data[0].name;
-        userLat = data[0].lat;
-        userLon = data[0].lon;
-        userLat = userLat.toString();
-        userLon = userLon.toString()
-        //Have to set variables to local storage so they can be retrieved elsewhere
-        localStorage.setItem('latitude', JSON.stringify(userLat))
-        localStorage.setItem('longitude',JSON.stringify(userLon))
-        localStorage.setItem('name',JSON.stringify(userName))
-        searchHistory(userName)
+    userName = data[0].name;
+    userLat = data[0].lat;
+    userLon = data[0].lon;
+    userLat = userLat.toString();
+    userLon = userLon.toString()
+    //Have to set variables to local storage so they can be retrieved elsewhere
+    localStorage.setItem('latitude', JSON.stringify(userLat))
+    localStorage.setItem('longitude',JSON.stringify(userLon))
+    localStorage.setItem('name',JSON.stringify(userName))
+    searchHistory(userName)
 
-        //second call
-        var API_BASE_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast?'
-        fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                console.log(data)
-                storeData (data)
-                renderForecast()
+    //second call
+    var API_BASE_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast?'
+    fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data)
+            storeData (data)
+            renderForecast()
         })
 
         //third call
@@ -72,8 +67,9 @@ searchButton.addEventListener('click',function(e) {
                 renderCurrent ()
             })
     })
+}
 
-    function storeData (data) {
+function storeData (data) {
 
     //Forecast for 1st day
     temp1 = data.list[7].main.temp
@@ -150,9 +146,9 @@ searchButton.addEventListener('click',function(e) {
     localStorage.setItem('humidity5',JSON.stringify(hum5))
     localStorage.setItem('date5',JSON.stringify(date5))
     localStorage.setItem('weathericon5',JSON.stringify(icon5))
-    }
+}
 
-    function renderCurrent() {
+function renderCurrent() {
     var currentDivEl = document.createElement('div')
     currentDivEl.setAttribute('style',' width:80%; background-color: var(--secondarycolor); margin-top:20px; margin-right: auto; margin-left: auto;')
     currentDivEl.setAttribute('class','card my2 align-items-center currentDivEl')
@@ -181,9 +177,9 @@ searchButton.addEventListener('click',function(e) {
     currentDivEl.appendChild(currentTemp)
     currentDivEl.appendChild(currentWind)
     currentDivEl.appendChild(currentHum)
-    }
+}
 
-    function renderForecast () {
+function renderForecast () {
     //Div 
     var divEl = document.createElement('div')
     divEl.setAttribute('class','d-flex justify-content-around DivEl')
@@ -352,86 +348,87 @@ searchButton.addEventListener('click',function(e) {
     divEl.appendChild(cardEl3)
     divEl.appendChild(cardEl4)
     divEl.appendChild(cardEl5)
-    }
+}
     
-    function removeData () {
-        //remove currentDivEl and divEl from page
-        var currentForecastEl = document.querySelector('.currentDivEl')
-        var forecastEl = document.querySelector('.DivEl')
+function removeData () {
+    var currentForecastEl = document.querySelector('.currentDivEl')
+    var forecastEl = document.querySelector('.DivEl')
         
-        if (typeof currentForecastEl !== 'undefined' && currentForecastEl !== null) {
-            currentForecastEl.remove();                            
-        }
-        if (typeof forecastEl !== 'undefined' && forecastEl !== null) {
-            forecastEl.remove();
-        }
-
-        //reset variables from local storage
-        localStorage.setItem('latitude', '')
-        localStorage.setItem('longitude', '')
-        localStorage.setItem('name', '')
-        localStorage.setItem('temperature1','')
-        localStorage.setItem('wind1','')
-        localStorage.setItem('humidity1','')
-        localStorage.setItem('date1','')
-        localStorage.setItem('weathericon1','')
-        localStorage.setItem('temperature2','')
-        localStorage.setItem('wind2','')
-        localStorage.setItem('humidity2','')
-        localStorage.setItem('date2','')
-        localStorage.setItem('weathericon2','')
-        localStorage.setItem('temperature3','')
-        localStorage.setItem('wind3','')
-        localStorage.setItem('humidity3','')
-        localStorage.setItem('date3','')
-        localStorage.setItem('weathericon3','')
-        localStorage.setItem('temperature4','')
-        localStorage.setItem('wind4','')
-        localStorage.setItem('humidity4','')
-        localStorage.setItem('date4','')
-        localStorage.setItem('weathericon4','')
-        localStorage.setItem('temperature5','')
-        localStorage.setItem('wind5','')
-        localStorage.setItem('humidity5','')
-        localStorage.setItem('date5','')
-        localStorage.setItem('weathericon5','')
-        localStorage.setItem('currentTemperature','')
-        localStorage.setItem('currentWind','')
-        localStorage.setItem('currentHum','')
-        localStorage.setItem('currentDate','')
-        localStorage.setItem('currentIcon','')
+    if (typeof currentForecastEl !== 'undefined' && currentForecastEl !== null) {
+        currentForecastEl.remove();                            
+    }
+    if (typeof forecastEl !== 'undefined' && forecastEl !== null) {
+        forecastEl.remove();
     }
 
-    
-    function searchHistory (userName) {
-        console.log(userName)
-        // localStorage.setItem(userName,JSON.stringify(userName))
+    //reset variables from local storage
+    localStorage.setItem('latitude', '')
+    localStorage.setItem('longitude', '')
+    localStorage.setItem('name', '')
+    localStorage.setItem('temperature1','')
+    localStorage.setItem('wind1','')
+    localStorage.setItem('humidity1','')
+    localStorage.setItem('date1','')
+    localStorage.setItem('weathericon1','')
+    localStorage.setItem('temperature2','')
+    localStorage.setItem('wind2','')
+    localStorage.setItem('humidity2','')
+    localStorage.setItem('date2','')
+    localStorage.setItem('weathericon2','')
+    localStorage.setItem('temperature3','')
+    localStorage.setItem('wind3','')
+    localStorage.setItem('humidity3','')
+    localStorage.setItem('date3','')
+    localStorage.setItem('weathericon3','')
+    localStorage.setItem('temperature4','')
+    localStorage.setItem('wind4','')
+    localStorage.setItem('humidity4','')
+    localStorage.setItem('date4','')
+    localStorage.setItem('weathericon4','')
+    localStorage.setItem('temperature5','')
+    localStorage.setItem('wind5','')
+    localStorage.setItem('humidity5','')
+    localStorage.setItem('date5','')
+    localStorage.setItem('weathericon5','')
+    localStorage.setItem('currentTemperature','')
+    localStorage.setItem('currentWind','')
+    localStorage.setItem('currentHum','')
+    localStorage.setItem('currentDate','')
+    localStorage.setItem('currentIcon','')
+}
 
-        //add div to page
-        //append cards to the div with the city name
-        // add a card for each userSearch and add the content to the div
-        // want cards to be added horizontally to avoid bad formatting
-        // cards should include name from data so think about location
-        var searchHistoryEl = document.querySelector('.searchHistoryEl')
-        var removeSearchEl = document.querySelector('.removeSearchEl')
-        if (typeof searchHistoryEl == 'undefined' || searchHistoryEl == null) {
-            var searchHistoryEl = document.createElement('div')
-            searchHistoryEl.setAttribute('class','d-flex flex-row searchHistoryEl')
-            document.body.appendChild(searchHistoryEl)                         
-        }
-        //if statement so remove button does not keep getting created 
-        var userSearches = document.createElement('button')
-        userSearches.setAttribute('class','btn')
-        userSearches.textContent = userName
-        searchHistoryEl.appendChild(userSearches)
+function searchHistory (userName) {
+    console.log(userName)
         
-        if (typeof removeSearchEl == 'undefined' || removeSearchEl == null) {
-            var removeSearchEl = document.createElement('button')
-            removeSearchEl.setAttribute('class','removeSearchEl btn')
-            removeSearchEl.textContent = 'Clear History'
-            document.body.appendChild(removeSearchEl)
-        }
-     }
-    //master reset button that resets all local storage views and removes search history
-    //SHOULD NOT BE INCLUDED HERE BECAUSE BUTTONS WILL NEVER PERSISENT AN EVENT SEARCH
-})
+    var searchHistoryEl = document.querySelector('.searchHistoryEl')
+    var removeSearchEl = document.querySelector('.removeSearchEl')
+    if (typeof searchHistoryEl == 'undefined' || searchHistoryEl == null) {
+        var searchHistoryEl = document.createElement('div')
+        searchHistoryEl.setAttribute('class','d-flex flex-row searchHistoryEl')
+        document.body.appendChild(searchHistoryEl)                         
+    }
+    var userSearches = document.createElement('button')
+    userSearches.setAttribute('class','search btn '+userName)
+    userSearches.textContent = userName
+    searchHistoryEl.appendChild(userSearches)
+        
+    if (typeof removeSearchEl == 'undefined' || removeSearchEl == null) {
+        var removeSearchEl = document.createElement('button')
+        removeSearchEl.setAttribute('class','removeSearchEl btn')
+        removeSearchEl.textContent = 'Clear History'
+        document.body.appendChild(removeSearchEl)
+    }
+    
+    var searchBtn = document.querySelector('.'+userName)
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click',function () {
+            fetchAPI(userName)
+    })}
+    
+   
+    
+}
+
+
+
