@@ -353,7 +353,7 @@ searchButton.addEventListener('click',function(e) {
     divEl.appendChild(cardEl4)
     divEl.appendChild(cardEl5)
     }
-    searchHistory()
+    
     function removeData () {
         //remove currentDivEl and divEl from page
         var currentForecastEl = document.querySelector('.currentDivEl')
@@ -404,13 +404,33 @@ searchButton.addEventListener('click',function(e) {
 
     
     function searchHistory (userName) {
-        localStorage.setItem(userName,JSON.stringify(userName))
+        console.log(userName)
+        // localStorage.setItem(userName,JSON.stringify(userName))
 
         //add div to page
         //append cards to the div with the city name
         // add a card for each userSearch and add the content to the div
         // want cards to be added horizontally to avoid bad formatting
         // cards should include name from data so think about location
+        var searchHistoryEl = document.querySelector('.searchHistoryEl')
+        var removeSearchEl = document.querySelector('.removeSearchEl')
+        if (typeof searchHistoryEl == 'undefined' || searchHistoryEl == null) {
+            var searchHistoryEl = document.createElement('div')
+            searchHistoryEl.setAttribute('class','d-flex flex-row searchHistoryEl')
+            document.body.appendChild(searchHistoryEl)                         
+        }
+        //if statement so remove button does not keep getting created 
+        var userSearches = document.createElement('button')
+        userSearches.setAttribute('class','btn')
+        userSearches.textContent = userName
+        searchHistoryEl.appendChild(userSearches)
+        
+        if (typeof removeSearchEl == 'undefined' || removeSearchEl == null) {
+            var removeSearchEl = document.createElement('button')
+            removeSearchEl.setAttribute('class','removeSearchEl btn')
+            removeSearchEl.textContent = 'Clear History'
+            document.body.appendChild(removeSearchEl)
+        }
      }
     //master reset button that resets all local storage views and removes search history
     //SHOULD NOT BE INCLUDED HERE BECAUSE BUTTONS WILL NEVER PERSISENT AN EVENT SEARCH

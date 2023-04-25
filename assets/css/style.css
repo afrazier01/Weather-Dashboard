@@ -37,12 +37,12 @@ body {
     background-color: var(--mainbackgroundcolor);
 }
 
-#search-button {
+#search-button, .btn {
     color: var(--secondarycolor);
     border-color: var(--secondarycolor);
 }
 
-#search-button:hover {
+#search-button:hover, .btn:hover {
     background-color: var(--secondarycolor);
     color: var(--mainbackgroundcolor);
 }
@@ -57,3 +57,4 @@ body {
     background-color: var(--secondarycolor);
     margin-top: 5px;
 }
+
