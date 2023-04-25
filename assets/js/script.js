@@ -54,7 +54,7 @@ searchButton.addEventListener('click',function(e) {
                 currentDate = data.dt
                 currentIcon = data.weather[0].icon
 
-                currentDate = dayjs(currentDate*1000).format('M/D/YYYY')
+                currentDate = dayjs(currentDate*1000).format('dddd - M/D/YYYY')
                 currentTemp = Math.round((currentTemp-273.15)*1.8+32)
 
                 localStorage.setItem('currentTemperature',JSON.stringify(currentTemp))
@@ -151,15 +151,11 @@ function renderCurrent(data) {
     var currentDivEl = document.createElement('div')
     currentDivEl.setAttribute('style',' width:80%; background-color: var(--secondarycolor); margin-top:20px; margin-right: auto; margin-left: auto;')
     currentDivEl.setAttribute('class','card my2 align-items-center')
-                
-    var currentDateEl = document.createElement('h2')
-    currentDateEl.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
-    currentDateEl.textContent = JSON.parse(localStorage.getItem('currentDate'))
 
     // elements
     var currentDateEl = document.createElement('h2')
     currentDateEl.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
-    currentDateEl.textContent = JSON.parse(localStorage.getItem('currentDate'))
+    currentDateEl.textContent =  'Today: '+JSON.parse(localStorage.getItem('currentDate'))
     currentIcon = document.createElement('img')
     currentIcon.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('currentIcon'))+'@2x.png')
     //add alt

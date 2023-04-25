@@ -46,3 +46,14 @@ body {
     background-color: var(--secondarycolor);
     color: var(--mainbackgroundcolor);
 }
+
+.navbar-brand {
+    color: var(--secondarycolor);
+    font-weight: bold;
+    font-style: italic;
+}
+
+.navbar {
+    background-color: var(--secondarycolor);
+    margin-top: 5px;
+}
