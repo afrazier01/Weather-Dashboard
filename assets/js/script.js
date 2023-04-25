@@ -6,7 +6,7 @@ dateEl.textContent = date
 
 searchButton.addEventListener('click',function(e) {
     e.preventDefault();
-    //remove previous content on the page (ie cards and divs)
+    
     removeData ()
     var userSearch = userInput.value
     var searchHistory = {}
@@ -155,7 +155,7 @@ searchButton.addEventListener('click',function(e) {
     function renderCurrent() {
     var currentDivEl = document.createElement('div')
     currentDivEl.setAttribute('style',' width:80%; background-color: var(--secondarycolor); margin-top:20px; margin-right: auto; margin-left: auto;')
-    currentDivEl.setAttribute('class','card my2 align-items-center')
+    currentDivEl.setAttribute('class','card my2 align-items-center currentDivEl')
 
     // elements
     var currentDateEl = document.createElement('h2')
@@ -186,7 +186,7 @@ searchButton.addEventListener('click',function(e) {
     function renderForecast () {
     //Div 
     var divEl = document.createElement('div')
-    divEl.setAttribute('class','d-flex justify-content-around')
+    divEl.setAttribute('class','d-flex justify-content-around DivEl')
     divEl.setAttribute('style','margin-top:20px;')
     document.body.appendChild(divEl)
 
@@ -355,8 +355,17 @@ searchButton.addEventListener('click',function(e) {
     }
 
     function removeData () {
-        //place this function at the beginning of the event lister
         //remove currentDivEl and divEl from page
+        var currentForecastEl = document.querySelector('.currentDivEl')
+        var forecastEl = document.querySelector('.DivEl')
+        
+        if (typeof currentForecastEl !== 'undefined' && currentForecastEl !== null) {
+            currentForecastEl.remove();                            
+        }
+        if (typeof forecastEl !== 'undefined' && forecastEl !== null) {
+            forecastEl.remove();
+        }
+
         //reset variables from local storage
         localStorage.setItem('latitude', '')
         localStorage.setItem('longitude', '')
@@ -391,7 +400,6 @@ searchButton.addEventListener('click',function(e) {
         localStorage.setItem('currentHum','')
         localStorage.setItem('currentDate','')
         localStorage.setItem('currentIcon','')
-
     }
 
 })
