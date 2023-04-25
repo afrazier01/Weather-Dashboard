@@ -9,12 +9,12 @@ searchButton.addEventListener('click',function(e) {
     
     removeData ()
     var userSearch = userInput.value
-    var searchHistory = {}
-    localStorage.setItem(userSearch,JSON.stringify(userSearch))
+    // localStorage.setItem(userSearch,JSON.stringify(userSearch))
 
     //add div to page
     // add a card for each userSearch and add the content to the div
     // want cards to be added horizontally to avoid bad formatting
+    // cards should include name from data so think about location
     
     var API_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct?q='
     //make sure this variable can be parsed properly
@@ -28,11 +28,11 @@ searchButton.addEventListener('click',function(e) {
         userLon = data[0].lon;
         userLat = userLat.toString();
         userLon = userLon.toString()
-        console.log('Name :>>', userName);
         //Have to set variables to local storage so they can be retrieved elsewhere
         localStorage.setItem('latitude', JSON.stringify(userLat))
         localStorage.setItem('longitude',JSON.stringify(userLon))
         localStorage.setItem('name',JSON.stringify(userName))
+        searchHistory(userName)
 
         //second call
         var API_BASE_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast?'
@@ -353,7 +353,7 @@ searchButton.addEventListener('click',function(e) {
     divEl.appendChild(cardEl4)
     divEl.appendChild(cardEl5)
     }
-
+    searchHistory()
     function removeData () {
         //remove currentDivEl and divEl from page
         var currentForecastEl = document.querySelector('.currentDivEl')
@@ -402,5 +402,16 @@ searchButton.addEventListener('click',function(e) {
         localStorage.setItem('currentIcon','')
     }
 
-})
+    
+    function searchHistory (userName) {
+        localStorage.setItem(userName,JSON.stringify(userName))
 
+        //add div to page
+        //append cards to the div with the city name
+        // add a card for each userSearch and add the content to the div
+        // want cards to be added horizontally to avoid bad formatting
+        // cards should include name from data so think about location
+     }
+    //master reset button that resets all local storage views and removes search history
+    //SHOULD NOT BE INCLUDED HERE BECAUSE BUTTONS WILL NEVER PERSISENT AN EVENT SEARCH
+})
