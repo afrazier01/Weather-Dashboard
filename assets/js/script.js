@@ -6,9 +6,15 @@ dateEl.textContent = date
 
 searchButton.addEventListener('click',function(e) {
     e.preventDefault();
-
-
+    //remove previous content on the page (ie cards and divs)
+    removeData ()
     var userSearch = userInput.value
+    var searchHistory = {}
+    localStorage.setItem(userSearch,JSON.stringify(userSearch))
+
+    //add div to page
+    // add a card for each userSearch and add the content to the div
+    // want cards to be added horizontally to avoid bad formatting
     
     var API_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct?q='
     //make sure this variable can be parsed properly
@@ -54,7 +60,7 @@ searchButton.addEventListener('click',function(e) {
                 currentDate = data.dt
                 currentIcon = data.weather[0].icon
 
-                currentDate = dayjs(currentDate*1000).format('dddd - M/D/YYYY')
+                currentDate = dayjs(currentDate*1000).format(' (M/D/YYYY)')
                 currentTemp = Math.round((currentTemp-273.15)*1.8+32)
 
                 localStorage.setItem('currentTemperature',JSON.stringify(currentTemp))
@@ -63,12 +69,11 @@ searchButton.addEventListener('click',function(e) {
                 localStorage.setItem('currentDate',JSON.stringify(currentDate))
                 localStorage.setItem('currentIcon',JSON.stringify(currentIcon))
 
-                renderCurrent (data)
+                renderCurrent ()
             })
     })
-})
 
-function storeData (data) {
+    function storeData (data) {
 
     //Forecast for 1st day
     temp1 = data.list[7].main.temp
@@ -145,9 +150,9 @@ function storeData (data) {
     localStorage.setItem('humidity5',JSON.stringify(hum5))
     localStorage.setItem('date5',JSON.stringify(date5))
     localStorage.setItem('weathericon5',JSON.stringify(icon5))
-}
+    }
 
-function renderCurrent(data) {
+    function renderCurrent() {
     var currentDivEl = document.createElement('div')
     currentDivEl.setAttribute('style',' width:80%; background-color: var(--secondarycolor); margin-top:20px; margin-right: auto; margin-left: auto;')
     currentDivEl.setAttribute('class','card my2 align-items-center')
@@ -155,7 +160,7 @@ function renderCurrent(data) {
     // elements
     var currentDateEl = document.createElement('h2')
     currentDateEl.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
-    currentDateEl.textContent =  'Today: '+JSON.parse(localStorage.getItem('currentDate'))
+    currentDateEl.textContent =  JSON.parse(localStorage.getItem('name'))+JSON.parse(localStorage.getItem('currentDate'))
     currentIcon = document.createElement('img')
     currentIcon.setAttribute('src','https://openweathermap.org/img/wn/'+JSON.parse(localStorage.getItem('currentIcon'))+'@2x.png')
     //add alt
@@ -168,7 +173,7 @@ function renderCurrent(data) {
     currentWind.textContent = 'Wind: '+JSON.parse(localStorage.getItem('currentWind'))+' MPH'
     currentHum = document.createElement('h2')
     currentHum.setAttribute('style','background-color: var(--secondarycolor); color: var(--mainbackgroundcolor); font-weight: bold;')
-    currentHum.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('humidity1'))+' %'
+    currentHum.textContent = 'Humidity: '+JSON.parse(localStorage.getItem('currentHum'))+' %'
 
     document.body.appendChild(currentDivEl)
     currentDivEl.appendChild(currentDateEl)
@@ -176,9 +181,9 @@ function renderCurrent(data) {
     currentDivEl.appendChild(currentTemp)
     currentDivEl.appendChild(currentWind)
     currentDivEl.appendChild(currentHum)
-}
+    }
 
-function renderForecast () {
+    function renderForecast () {
     //Div 
     var divEl = document.createElement('div')
     divEl.setAttribute('class','d-flex justify-content-around')
@@ -347,4 +352,47 @@ function renderForecast () {
     divEl.appendChild(cardEl3)
     divEl.appendChild(cardEl4)
     divEl.appendChild(cardEl5)
-}
+    }
+
+    function removeData () {
+        //place this function at the beginning of the event lister
+        //remove currentDivEl and divEl from page
+        //reset variables from local storage
+        localStorage.setItem('latitude', '')
+        localStorage.setItem('longitude', '')
+        localStorage.setItem('name', '')
+        localStorage.setItem('temperature1','')
+        localStorage.setItem('wind1','')
+        localStorage.setItem('humidity1','')
+        localStorage.setItem('date1','')
+        localStorage.setItem('weathericon1','')
+        localStorage.setItem('temperature2','')
+        localStorage.setItem('wind2','')
+        localStorage.setItem('humidity2','')
+        localStorage.setItem('date2','')
+        localStorage.setItem('weathericon2','')
+        localStorage.setItem('temperature3','')
+        localStorage.setItem('wind3','')
+        localStorage.setItem('humidity3','')
+        localStorage.setItem('date3','')
+        localStorage.setItem('weathericon3','')
+        localStorage.setItem('temperature4','')
+        localStorage.setItem('wind4','')
+        localStorage.setItem('humidity4','')
+        localStorage.setItem('date4','')
+        localStorage.setItem('weathericon4','')
+        localStorage.setItem('temperature5','')
+        localStorage.setItem('wind5','')
+        localStorage.setItem('humidity5','')
+        localStorage.setItem('date5','')
+        localStorage.setItem('weathericon5','')
+        localStorage.setItem('currentTemperature','')
+        localStorage.setItem('currentWind','')
+        localStorage.setItem('currentHum','')
+        localStorage.setItem('currentDate','')
+        localStorage.setItem('currentIcon','')
+
+    }
+
+})
+
