@@ -13,7 +13,7 @@ searchButton.addEventListener('click',function(e) {
 function fetchAPI (userSearch) {
     removeData ();
     var API_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct?q='
-    fetch(API_BASE_URL + userSearch + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
+    fetch(API_BASE_URL + userSearch + '&appid=489926538e0b86d709e90c069e0d5027')
     .then(function (res) {
     return res.json();
     })
@@ -31,7 +31,7 @@ function fetchAPI (userSearch) {
 
     //second call
     var API_BASE_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast?'
-    fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
+    fetch(API_BASE_URL_FORECAST + 'lat=' + userLat + '&lon=' + userLon + '&appid=489926538e0b86d709e90c069e0d5027')
         .then(function (response) {
             return response.json();
         })
@@ -43,7 +43,7 @@ function fetchAPI (userSearch) {
 
         //third call
         var API_BASE_URL_CURRENT = 'https://api.openweathermap.org/data/2.5/weather?'
-        fetch(API_BASE_URL_CURRENT + 'lat=' + userLat + '&lon=' + userLon + '&appid=c8bc3bcdb62723fa5a3408d73058eac9')
+        fetch(API_BASE_URL_CURRENT + 'lat=' + userLat + '&lon=' + userLon + '&appid=489926538e0b86d709e90c069e0d5027')
             .then(function (res) {
                 return res.json();
             }).then( function (data) {
@@ -398,8 +398,6 @@ function removeData () {
 }
 
 function searchHistory (userName) {
-    console.log(userName)
-        
     var searchHistoryEl = document.querySelector('.searchHistoryEl')
     var removeSearchEl = document.querySelector('.removeSearchEl')
     if (typeof searchHistoryEl == 'undefined' || searchHistoryEl == null) {
@@ -407,8 +405,13 @@ function searchHistory (userName) {
         searchHistoryEl.setAttribute('class','d-flex flex-row searchHistoryEl')
         document.body.appendChild(searchHistoryEl)                         
     }
+
+    x = userName.split(' ')
+    userNameUse = x.join('-')
+    userNameUse = userNameUse.toLowerCase()
+
     var userSearches = document.createElement('button')
-    userSearches.setAttribute('class','search btn '+userName)
+    userSearches.setAttribute('class','search btn '+userNameUse)
     userSearches.textContent = userName
     searchHistoryEl.appendChild(userSearches)
         
@@ -419,15 +422,12 @@ function searchHistory (userName) {
         document.body.appendChild(removeSearchEl)
     }
     
-    var searchBtn = document.querySelector('.'+userName)
-    
+    var searchBtn = document.querySelector('.'+userNameUse)
     if (searchBtn) {
         searchBtn.addEventListener('click',function () {
             fetchAPI(userName)
-    })}
-    
-   
-    
+        }) 
+    }
 }
 
 
