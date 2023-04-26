@@ -36,36 +36,36 @@ function fetchAPI (userSearch) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
+            // console.log(data)
             storeData (data)
             renderForecast()
         })
 
-        //third call
-        var API_BASE_URL_CURRENT = 'https://api.openweathermap.org/data/2.5/weather?'
-        fetch(API_BASE_URL_CURRENT + 'lat=' + userLat + '&lon=' + userLon + '&appid=489926538e0b86d709e90c069e0d5027')
-            .then(function (res) {
-                return res.json();
-            }).then( function (data) {
-                console.log(data)
+    //third call
+    var API_BASE_URL_CURRENT = 'https://api.openweathermap.org/data/2.5/weather?'
+    fetch(API_BASE_URL_CURRENT + 'lat=' + userLat + '&lon=' + userLon + '&appid=489926538e0b86d709e90c069e0d5027')
+        .then(function (res) {
+            return res.json();
+        }).then( function (data) {
+            // console.log(data)
 
-                currentTemp = data.main.temp
-                currentWind = data.wind.speed
-                currentHum = data.main.humidity
-                currentDate = data.dt
-                currentIcon = data.weather[0].icon
+            currentTemp = data.main.temp
+            currentWind = data.wind.speed
+            currentHum = data.main.humidity
+            currentDate = data.dt
+            currentIcon = data.weather[0].icon
 
-                currentDate = dayjs(currentDate*1000).format(' (M/D/YYYY)')
-                currentTemp = Math.round((currentTemp-273.15)*1.8+32)
+            currentDate = dayjs(currentDate*1000).format(' (M/D/YYYY)')
+            currentTemp = Math.round((currentTemp-273.15)*1.8+32)
 
-                localStorage.setItem('currentTemperature',JSON.stringify(currentTemp))
-                localStorage.setItem('currentWind',JSON.stringify(currentWind))
-                localStorage.setItem('currentHum',JSON.stringify(currentHum))
-                localStorage.setItem('currentDate',JSON.stringify(currentDate))
-                localStorage.setItem('currentIcon',JSON.stringify(currentIcon))
+            localStorage.setItem('currentTemperature',JSON.stringify(currentTemp))
+            localStorage.setItem('currentWind',JSON.stringify(currentWind))
+            localStorage.setItem('currentHum',JSON.stringify(currentHum))
+            localStorage.setItem('currentDate',JSON.stringify(currentDate))
+            localStorage.setItem('currentIcon',JSON.stringify(currentIcon))
 
-                renderCurrent ()
-            })
+            renderCurrent ()
+        })
     })
 }
 
@@ -412,15 +412,12 @@ function searchHistory (userName) {
 
     //if statement - only create button if the userNameUse does not exist in a search button already
     if (!document.querySelector('.search.btn.'+userNameUse)) {
-        console.log('this button does not exist yet')
         var userSearches = document.createElement('button')
         userSearches.setAttribute('class','search btn '+userNameUse)
         userSearches.textContent = userName
         searchHistoryEl.appendChild(userSearches)
-    } else {
-        console.log('This button exist already')
     }
-    
+
     if (typeof removeSearchEl == 'undefined' || removeSearchEl == null) {
         var removeSearchEl = document.createElement('button')
         removeSearchEl.setAttribute('class','removeSearchEl btn')
@@ -435,23 +432,11 @@ function searchHistory (userName) {
         }) 
     }
 
-   
     removeSearchEl.addEventListener('click', function () {
-        console.log('You clicked the clear button! add conditions now');
         removeData();
         localStorage.clear();
         removeSearchEl.remove();
         searchHistoryEl.remove();
-        
-        // var currentForecastEl = document.querySelector('.currentDivEl')
-        // var forecastEl = document.querySelector('.DivEl')
-        
-        // if (typeof currentForecastEl !== 'undefined' && currentForecastEl !== null) {
-        // currentForecastEl.remove();                            
-        // }
-        // if (typeof forecastEl !== 'undefined' && forecastEl !== null) {
-        // forecastEl.remove();
-        // }
     })
 }
 
