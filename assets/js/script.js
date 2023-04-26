@@ -403,6 +403,7 @@ function searchHistory (userName) {
     if (typeof searchHistoryEl == 'undefined' || searchHistoryEl == null) {
         var searchHistoryEl = document.createElement('div')
         searchHistoryEl.setAttribute('class','d-flex flex-row searchHistoryEl')
+        searchHistoryEl.setAttribute('style','margin: 5px')
         document.body.appendChild(searchHistoryEl)                         
     }
 
@@ -414,6 +415,7 @@ function searchHistory (userName) {
     if (!document.querySelector('.search.btn.'+userNameUse)) {
         var userSearches = document.createElement('button')
         userSearches.setAttribute('class','search btn '+userNameUse)
+        userSearches.setAttribute('style','margin: 5px')
         userSearches.textContent = userName
         searchHistoryEl.appendChild(userSearches)
     }
@@ -421,6 +423,7 @@ function searchHistory (userName) {
     if (typeof removeSearchEl == 'undefined' || removeSearchEl == null) {
         var removeSearchEl = document.createElement('button')
         removeSearchEl.setAttribute('class','removeSearchEl btn')
+        removeSearchEl.setAttribute('style','margin: 5px; margin-left:5px;')
         removeSearchEl.textContent = 'Clear History'
         document.body.appendChild(removeSearchEl)
     }
