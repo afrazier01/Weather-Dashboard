@@ -12,7 +12,7 @@ searchButton.addEventListener('click',function(e) {
 
 function fetchAPI (userSearch) {
     removeData ();
-    var API_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct?q='
+    var API_BASE_URL = 'https://api.openweathermap.org/geo/1.0/direct?q='
     fetch(API_BASE_URL + userSearch + '&appid=489926538e0b86d709e90c069e0d5027')
     .then(function (res) {
     return res.json();
