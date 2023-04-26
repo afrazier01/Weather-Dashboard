@@ -434,6 +434,25 @@ function searchHistory (userName) {
             fetchAPI(userName)
         }) 
     }
+
+   
+    removeSearchEl.addEventListener('click', function () {
+        console.log('You clicked the clear button! add conditions now');
+        removeData();
+        localStorage.clear();
+        removeSearchEl.remove();
+        searchHistoryEl.remove();
+        
+        // var currentForecastEl = document.querySelector('.currentDivEl')
+        // var forecastEl = document.querySelector('.DivEl')
+        
+        // if (typeof currentForecastEl !== 'undefined' && currentForecastEl !== null) {
+        // currentForecastEl.remove();                            
+        // }
+        // if (typeof forecastEl !== 'undefined' && forecastEl !== null) {
+        // forecastEl.remove();
+        // }
+    })
 }
 
 
