@@ -410,11 +410,17 @@ function searchHistory (userName) {
     userNameUse = x.join('-')
     userNameUse = userNameUse.toLowerCase()
 
-    var userSearches = document.createElement('button')
-    userSearches.setAttribute('class','search btn '+userNameUse)
-    userSearches.textContent = userName
-    searchHistoryEl.appendChild(userSearches)
-        
+    //if statement - only create button if the userNameUse does not exist in a search button already
+    if (!document.querySelector('.search.btn.'+userNameUse)) {
+        console.log('this button does not exist yet')
+        var userSearches = document.createElement('button')
+        userSearches.setAttribute('class','search btn '+userNameUse)
+        userSearches.textContent = userName
+        searchHistoryEl.appendChild(userSearches)
+    } else {
+        console.log('This button exist already')
+    }
+    
     if (typeof removeSearchEl == 'undefined' || removeSearchEl == null) {
         var removeSearchEl = document.createElement('button')
         removeSearchEl.setAttribute('class','removeSearchEl btn')
