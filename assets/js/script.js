@@ -28,6 +28,7 @@ function fetchAPI (userSearch) {
     localStorage.setItem('longitude',JSON.stringify(userLon))
     localStorage.setItem('name',JSON.stringify(userName))
     searchHistory(userName)
+    console.log('\nUser input returned: '+userName)
 
     //second call
     var API_BASE_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast?'
@@ -36,7 +37,7 @@ function fetchAPI (userSearch) {
             return response.json();
         })
         .then(function (data) {
-            // console.log(data)
+            console.log('Forecast data: '+data)
             storeData (data)
             renderForecast()
         })
@@ -47,7 +48,7 @@ function fetchAPI (userSearch) {
         .then(function (res) {
             return res.json();
         }).then( function (data) {
-            // console.log(data)
+            console.log('Current data: '+data)
 
             currentTemp = data.main.temp
             currentWind = data.wind.speed
@@ -68,6 +69,7 @@ function fetchAPI (userSearch) {
         })
     })
 }
+
 
 function storeData (data) {
 
